@@ -1,4 +1,4 @@
-package com.panamodels;
+package com.panamodels.crawlers;
 
 
 import java.io.IOException;
