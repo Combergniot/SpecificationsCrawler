@@ -3,8 +3,4 @@
 target/generated-sources/
 
 /.idea/
-target/classes/application.properties
-target/classes/com/panamodels/crawlers/
-target/classes/com/panamodels/model/
-target/classes/com/panamodels/repositories/
-target/classes/com/panamodels/services/
+/target/

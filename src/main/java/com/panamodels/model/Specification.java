@@ -1,14 +1,21 @@
 package com.panamodels.model;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Properties;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Specification {
@@ -16,16 +23,92 @@ public class Specification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String model;
-
     private String specUrl;
-
     private String countryId;
+    private Long productId;
 
-    @Column
-    @ElementCollection(targetClass= Properties.class, fetch = FetchType.EAGER)
-    private List<Properties> propertiesList;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updatedAt;
+
+    //    OneToMany players;
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "specification", orphanRemoval = true)
+    private List<Properties> players = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getSpecUrl() {
+        return specUrl;
+    }
+
+    public void setSpecUrl(String specUrl) {
+        this.specUrl = specUrl;
+    }
+
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<Properties> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Properties> players) {
+        this.players = players;
+    }
 }
