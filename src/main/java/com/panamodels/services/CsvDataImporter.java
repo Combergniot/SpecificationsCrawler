@@ -3,11 +3,8 @@ package com.panamodels.services;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.panamodels.model.Specification;
-import com.panamodels.repositories.SpecificationRepository;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.csv.CSVFormat;
@@ -18,11 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class CsvDataImporter {
 
-    private final SpecificationRepository specificationRepository;
+    private final SpecificationService specificationService;
 
-    public CsvDataImporter(SpecificationRepository specificationRepository) {
-        this.specificationRepository = specificationRepository;
+    public CsvDataImporter(SpecificationService specificationService) {
+        this.specificationService = specificationService;
     }
+
 
     public void captureDataFromCSV(final MultipartFile file) throws IOException {
         if (file.getSize() > 0) {
@@ -42,7 +40,7 @@ public class CsvDataImporter {
                 specification.setCountryId(record.get(2));
                 specification.setSpecUrl(prepareSpecUrl(record.get(5)));
                 specification.setProductId(Long.valueOf(record.get(0)));
-                specificationRepository.save(specification);
+                specificationService.save(specification);
             }
             in.close();
         }

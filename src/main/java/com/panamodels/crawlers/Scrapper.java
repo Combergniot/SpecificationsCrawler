@@ -5,28 +5,26 @@ import java.io.IOException;
 
 import com.panamodels.model.Properties;
 import com.panamodels.model.Specification;
-import com.panamodels.repositories.PropertiesRepository;
-import com.panamodels.repositories.SpecificationRepository;
+import com.panamodels.services.PropertiesService;
+import com.panamodels.services.SpecificationService;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Scrapper extends ScrapperConfig {
 
-    private final SpecificationRepository specificationRepository;
-    private final PropertiesRepository propertiesRepository;
+    private final SpecificationService specificationService;
+    private final PropertiesService propertiesService;
 
-    @Autowired
-    public Scrapper(SpecificationRepository specificationRepository, PropertiesRepository propertiesRepository) {
-        this.specificationRepository = specificationRepository;
-        this.propertiesRepository = propertiesRepository;
+    public Scrapper(SpecificationService specificationService, PropertiesService propertiesService) {
+        this.specificationService = specificationService;
+        this.propertiesService = propertiesService;
     }
 
     public void collectSpecifications() throws IOException, IllegalArgumentException {
-        Iterable<Specification> specifications = specificationRepository.findAll();
+        Iterable<Specification> specifications = specificationService.list();
 
         for (Specification specs : specifications) {
             if (specs.getSpecUrl() != null && specs.getSpecUrl().length() !=0) {
@@ -37,7 +35,7 @@ public class Scrapper extends ScrapperConfig {
                     properties.setSpecification(specs);
                     properties.setName(element.select("th[scope = row]").text());
                     properties.setValue(element.select("td.tb-blk").text());
-                    propertiesRepository.save(properties);
+                    propertiesService.save(properties);
                 }
             }
         }

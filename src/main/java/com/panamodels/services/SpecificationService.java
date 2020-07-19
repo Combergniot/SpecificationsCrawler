@@ -19,16 +19,14 @@ public class SpecificationService {
         return specificationRepository.findAll();
     }
 
-    public Specification save(Specification project) {
-        return specificationRepository.save(project);
+    public Specification save(Specification specification) {
+        return specificationRepository.save(specification);
     }
 
     public Optional<Specification> findById(Long id) {
         return specificationRepository.findById(id);
     }
 
-    public Optional<Specification> findByModelAndCountryId(String model, String countryId) {
-        return specificationRepository.findByModelAndCountryId(model, countryId);
-    }
+
 
 }

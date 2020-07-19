@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import com.panamodels.crawlers.Scrapper;
 import com.panamodels.model.Specification;
-import com.panamodels.repositories.SpecificationRepository;
 import com.panamodels.services.CsvDataImporter;
+import com.panamodels.services.SpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class SpecificationResource {
 
     private final CsvDataImporter csvDataImporter;
-    private final SpecificationRepository specificationRepository;
+    private final SpecificationService specificationService;
     private final Scrapper scrapper;
 
     @Autowired
     public SpecificationResource(CsvDataImporter csvDataImporter,
-                                 SpecificationRepository specificationRepository, Scrapper scrapper) {
+                                 SpecificationService specificationService, Scrapper scrapper) {
         this.csvDataImporter = csvDataImporter;
-        this.specificationRepository = specificationRepository;
+        this.specificationService = specificationService;
         this.scrapper = scrapper;
     }
 
@@ -55,7 +55,7 @@ public class SpecificationResource {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public Iterable<Specification> showAll() {
-       return specificationRepository.findAll();
+       return specificationService.list();
     }
 
     @RequestMapping(
@@ -64,7 +64,7 @@ public class SpecificationResource {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public Optional<Specification> findOne(@PathVariable String id) {
-        return specificationRepository.findById(Long.valueOf(id));
+        return specificationService.findById(Long.valueOf(id));
     }
 }
 

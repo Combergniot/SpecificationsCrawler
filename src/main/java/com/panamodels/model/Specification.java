@@ -31,7 +31,6 @@ public class Specification {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
-    //    OneToMany;
     @OneToMany(
             cascade = CascadeType.REFRESH,
             fetch = FetchType.EAGER,
