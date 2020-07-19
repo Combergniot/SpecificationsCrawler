@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Specification {
@@ -35,7 +33,7 @@ public class Specification {
 
     //    OneToMany players;
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "specification", orphanRemoval = true)
-    private List<Properties> players = new ArrayList<>();
+    private List<Properties> properties = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -104,11 +102,11 @@ public class Specification {
         this.updatedAt = updatedAt;
     }
 
-    public List<Properties> getPlayers() {
-        return players;
+    public List<Properties> getProperties() {
+        return properties;
     }
 
-    public void setPlayers(List<Properties> players) {
-        this.players = players;
+    public void setProperties(List<Properties> properties) {
+        this.properties = properties;
     }
 }

@@ -1,7 +1,7 @@
 package com.panamodels.controllers;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Optional;
 
 import com.panamodels.crawlers.Scrapper;
 import com.panamodels.model.Specification;
@@ -18,38 +18,44 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("specs")
-public class SpecificationResourceController {
+public class SpecificationResource {
 
     private final CsvDataImporter csvDataImporter;
     private final SpecificationRepository specificationRepository;
-    private final Scrapper scrapper;
 
     @Autowired
-    public SpecificationResourceController(CsvDataImporter csvDataImporter,
-                                           SpecificationRepository specificationRepository, Scrapper scrapper) {
+    public SpecificationResource(CsvDataImporter csvDataImporter,
+                                 SpecificationRepository specificationRepository) {
         this.csvDataImporter = csvDataImporter;
         this.specificationRepository = specificationRepository;
-        this.scrapper = scrapper;
     }
 
-//    TODO
     @RequestMapping(
             value = "/importData",
-            method = RequestMethod.GET,
+            method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public void showSpecifications(@RequestParam("file") MultipartFile file) throws IOException {
-        csvDataImporter.captureDataFromCSV(file);
+         csvDataImporter.captureDataFromCSV(file);
     }
 
-//    TODO
     @RequestMapping(
-            value = "/show",
+            value = "/showAll",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<String> show() throws IOException {
-        return scrapper.showOneSpecification("https://www.panasonic.com/pl/consumer/kamery-i-aparaty/kamery/kamery-4k/hc-vx870ep-k.specs.html");
+    public Iterable<Specification> showAll() {
+       return specificationRepository.findAll();
     }
 
+    @RequestMapping(
+            value = "/show/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Optional<Specification> findOne(@PathVariable String id) {
+        return specificationRepository.findById(Long.valueOf(id));
+    }
 }
+
+

@@ -6,7 +6,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.panamodels.model.SpecificationDTO;
+import com.panamodels.model.Specification;
+import com.panamodels.repositories.SpecificationRepository;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.csv.CSVFormat;
@@ -17,9 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class CsvDataImporter {
 
-    public List<SpecificationDTO> captureDataFromCSV(final MultipartFile file) throws IOException{
-        List<SpecificationDTO> specifications = new ArrayList<>();
+    private final SpecificationRepository specificationRepository;
 
+    public CsvDataImporter(SpecificationRepository specificationRepository) {
+        this.specificationRepository = specificationRepository;
+    }
+
+    public void captureDataFromCSV(final MultipartFile file) throws IOException {
         if (file.getSize() > 0) {
             Reader in = new InputStreamReader(file.getInputStream());
 
@@ -32,15 +37,15 @@ public class CsvDataImporter {
                             .parse(in);
 
             for (CSVRecord record : records) {
-                SpecificationDTO specificationDTO = new SpecificationDTO();
-                specificationDTO.setModel(record.get(4));
-                specificationDTO.setCountryId(record.get(2));
-                specificationDTO.setSpecUrl(record.get(5));
-                specificationDTO.setProductId(Long.valueOf(record.get(0)));
+                Specification specification = new Specification();
+                specification.setModel(record.get(4));
+                specification.setCountryId(record.get(2));
+                specification.setSpecUrl(prepareSpecUrl(record.get(5)));
+                specification.setProductId(Long.valueOf(record.get(0)));
+                specificationRepository.save(specification);
             }
             in.close();
         }
-    return specifications;
     }
 
     private char getDelimiter(final MultipartFile file) throws IOException {
@@ -51,5 +56,13 @@ public class CsvDataImporter {
         parser.parseAll(file.getInputStream());
 
         return parser.getDetectedFormat().getDelimiter();
+    }
+
+    private String prepareSpecUrl(String link) {
+        String text = link.replace(".html", ".specs.html");
+        if (text.contains("$")) {
+            return text.substring(0, link.lastIndexOf("$")+6);
+        }
+        return text;
     }
 }
