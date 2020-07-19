@@ -13,5 +13,4 @@ public interface SpecificationRepository extends CrudRepository<Specification, L
 
     Optional<Specification>findByModelAndCountryId(String model, String countryId);
 
-
 }

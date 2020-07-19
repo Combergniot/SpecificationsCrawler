@@ -22,12 +22,14 @@ public class SpecificationResource {
 
     private final CsvDataImporter csvDataImporter;
     private final SpecificationRepository specificationRepository;
+    private final Scrapper scrapper;
 
     @Autowired
     public SpecificationResource(CsvDataImporter csvDataImporter,
-                                 SpecificationRepository specificationRepository) {
+                                 SpecificationRepository specificationRepository, Scrapper scrapper) {
         this.csvDataImporter = csvDataImporter;
         this.specificationRepository = specificationRepository;
+        this.scrapper = scrapper;
     }
 
     @RequestMapping(
@@ -35,8 +37,16 @@ public class SpecificationResource {
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public void showSpecifications(@RequestParam("file") MultipartFile file) throws IOException {
+    public void importDataFromCSVFile(@RequestParam("file") MultipartFile file) throws IOException {
          csvDataImporter.captureDataFromCSV(file);
+    }
+
+    @RequestMapping(
+            value = "/updateProperties",
+            method = RequestMethod.POST
+    )
+    public void collectProperties() throws IOException {
+        scrapper.collectSpecifications();
     }
 
     @RequestMapping(

@@ -31,8 +31,12 @@ public class Specification {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
-    //    OneToMany players;
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "specification", orphanRemoval = true)
+    //    OneToMany;
+    @OneToMany(
+            cascade = CascadeType.REFRESH,
+            fetch = FetchType.EAGER,
+            mappedBy = "specification",
+            orphanRemoval = true)
     private List<Properties> properties = new ArrayList<>();
 
     @PrePersist

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,7 +18,10 @@ public class Properties {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Lob
     private String name;
+
+    @Lob
     private String value;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -59,4 +63,5 @@ public class Properties {
     public void setSpecification(Specification specification) {
         this.specification = specification;
     }
+
 }
