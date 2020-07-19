@@ -10,7 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface SpecificationRepository extends CrudRepository<Specification, Long> {
 
     Optional<Specification> findById(Long id);
-
-    Optional<Specification>findByModelAndCountryId(String model, String countryId);
-
 }
